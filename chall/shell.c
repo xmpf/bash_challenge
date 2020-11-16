@@ -19,8 +19,6 @@
 #define RST "\x1B[0m"
 
 
-/* FLAG */
-const char FLAG[] = "FLAG{4_n1nj4_iN_d@_t3mple!}";
 /* FAIL_MSG */
 const char FAIL_MSG[] = RED "ACCESS DENIED: " RST "YOU ARE NOT A REAL NINJA. COME BACK LATER!";
 /* WELCOME_MSG */
