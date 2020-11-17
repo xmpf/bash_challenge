@@ -13,16 +13,19 @@
 #define MAX_TRIES 3
 #endif
 
+/* can be specified on comipilation using -DCLOSE_STDOUT=1 */
+#ifndef CLOSE_STDOUT
+#define CLOSE_STDOUT 0
+#endif
+
 /* COLORS */
 #define BLU "\x1B[34m"
 #define RED "\x1B[31m"
 #define RST "\x1B[0m"
 
 
-/* FAIL_MSG */
-const char FAIL_MSG[] = RED "ACCESS DENIED: " RST "YOU ARE NOT A REAL NINJA. COME BACK LATER!";
 /* WELCOME_MSG */
-const char WELCOME_MSG[] = "WELCOME STRANGER! ONLY REAL " BLU "NINJA " RST "ARE ALLOWED TO ENTER...";
+const char WELCOME_MSG[] = "WELCOME STRANGER! ONLY REAL " RED "NINJA " RST "ARE ALLOWED TO ENTER...";
 
 /* ASCII art */
 void welcome(void)
@@ -33,8 +36,9 @@ void welcome(void)
     };
 
 
-    printf("%s\n\n"
-           "\t%s\n",
+    fprintf(stderr,
+           "%s\n\n"
+           "\t%s\n\n",
            moria_txt,
            WELCOME_MSG);
 
@@ -43,10 +47,7 @@ void welcome(void)
 int main(int argc, char *argv[], char *environ[])
 {   
     /* welcome art */
-    (void) welcome();
-
-    // Todo:
-    //      + blacklist specific strings after decoding (use a wrapper shell script to match specific strings)    
+    (void) welcome();  
 
     /* VARIABLES */
     int ret = 0;            // return codes    
@@ -82,11 +83,13 @@ int main(int argc, char *argv[], char *environ[])
                         goto L_ERROR;
                     }
 
+#if CLOSE_STDOUT
                     errno = 0;
                     ret = fclose(stdout); /* close stdout */
                     if (0 != ret) {
                         goto L_ERROR;
                     }
+#endif               
                     
                     /* Invocation Arguments */
                     char *args[] = { "/bin/bash", "-c", "--", input, NULL };
@@ -106,11 +109,11 @@ int main(int argc, char *argv[], char *environ[])
 
                 /* parent */
                 default:
-                    waitpid(pid, NULL, 0);
+                    wait(NULL);
                     break;
             }
     }
-    printf("\t%s\n", FAIL_MSG);
+
     return 0;
 
     L_ERROR:
