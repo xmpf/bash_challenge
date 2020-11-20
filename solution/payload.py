@@ -1,11 +1,15 @@
 #!/usr/bin/python3
 
+USE_UNICODE=True
+
 while True:
     cmd = input("> ")
-    lst = []
+    lst = ["$'"]
     for c in cmd:
-        if ord('a') <= ord(c) <= ord('z'):
-            lst.append( "$\'\\" + oct(ord(c))[2::] + "\'" )
+        cc = ord(c)
+        if ord('a') <= cc <= ord('z'):
+            lst.append( "\\U{:x}".format(cc) if USE_UNICODE else f"\\{oct(cc)[2:]}" )
         else:
             lst.append( c )
+    lst.append( "'" )
     print( ''.join(lst) )

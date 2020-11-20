@@ -69,3 +69,7 @@ nc 127.0.0.1 4000
 ## .solution
 
 As lowercase letters are converted to uppercase, use octal representation `$'\XYZ'`.
+
+## .about
+Author: ishtar (@megatr0nz)
+
